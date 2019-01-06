@@ -206,8 +206,15 @@ public class Updater extends BroadcastReceiver {
 		String currentText = null;
 		Long value = CurrentReaderFactory.getValue();
 		if (value == null) {
+			if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+				BatteryManager batteryManager = (BatteryManager)context.getSystemService(Context.BATTERY_SERVICE);
+				value = Long.valueOf(batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CURRENT_NOW));
+			}
+		}
+
+		if (value == null) {
 			currentText = NO_DATA_TEXT;
-		} else {				
+		} else {
 			if (value < 0) {
 				value = value * (-1);
 			}
